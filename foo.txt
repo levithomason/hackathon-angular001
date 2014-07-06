@@ -1,7 +1,0 @@
-bar
-HI!
-
-Levi is working!
-
-
-Hudson IDE
