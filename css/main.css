@@ -1,25 +1,49 @@
-
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
 
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+/*
+ Bootstrap Overrides
+ */
+.list-group-item, .list-group-item > * {
+    cursor: pointer;
 }
 
+.list-group-item > .badge {
+    display: none;
+}
 
+.list-group-item:not(.active):hover > .badge {
+    display: block;
+}
 
+.list-group-item:hover > .badge:hover {
+    background: red;
+}
 
+/*
+ Chat Room
+ */
+.my_chat_room {
+    border: 1px solid #DDD;
+    margin-bottom: 10px;
+    height: 300px;
+    overflow-y: scroll;
+}
 
+.my_chat_block {
+    clear: both;
+}
 
+.my_username {
+    float: left;
+    padding-right: 10px;
+    width: 130px;
+    text-align: right;
+    border-right: 1px solid #DDD;
+}
 
-
-
-
-
-
-
-
-
+.my_message {
+    float: left;
+    padding-left: 10px;
+}

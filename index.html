@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>ng-hackathon</title>
+        <title>Hackathon AngularFire Chat</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -18,81 +18,109 @@
         <script src="js/app.js"></script>
     </head>
     <body ng-controller="HackathonCtl" ng-init="init()">
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="">AngularFire Chat</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" role="form" ng-hide="my_name_is_saved">
+                        <div class="form-group">
+                            <input type="text" placeholder="Name" class="form-control" ng-model="my_name">
+                        </div>
+                        <button type="submit" class="btn btn-success" ng-click="send_my_name()" ng-disabled="!my_name">
+                            <i class="glyphicon glyphicon-comment"></i>
+                            Start Chatting
+                        </button>
+                    </form>
+                    <p class="navbar-text navbar-right" ng-show="my_name_is_saved">
+                        Chatting as <a href="" class="navbar-link">{{ my_saved_name }}</a>
+                    </p>
+                </div>
+                <!--/.navbar-collapse -->
+            </div>
         </div>
-        <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form">
-            <div class="form-group">
-              <input type="text" placeholder="Name" class="form-control" ng-model="my_name">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success" ng-click="save_my_name()">Sign in</button>
-          </form>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
+    <div class="jumbotron" ng-hide="my_name_is_saved">
       <div class="container">
-        <h1>Hello, {{ my_saved_name }}!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+        <h1>Hello, Friend!</h1>
+        <p>Enter your name to get started chatting!</p>
       </div>
     </div>
 
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <label>Chats</label>
-                <div class="well">
-                    <div ng-repeat="chat in my_chats track by $index">{{ chat }}</div>
+        <div class="row" ng-show="my_name_is_saved">
+            <div class="col-xs-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Channels</h3>
+                    </div>
+                    <div class="panel-body">
+                         <p>Channels are reset on refresh.</p>
+                         <p>Try adding a <span class="label label-default">Secret</span> channel.</p>
+
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item" ng-repeat="channel in my_channels track by $index" ng-click="set_my_channel(channel)" ng-class="{ active: channel == $parent.my_channel }">
+                            <span class="badge text-danger" ng-click="delete_my_channel(channel)">
+                                <i class="glyphicon glyphicon-minus"></i>
+                            </span>
+                            {{ channel }}
+                        </a>
+                    </div>
+                    <div class="panel-footer">
+                        <form id="my_new_channel_form">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="New Channel" ng-model="my_new_channel"/>
+                                <span class="input-group-btn">
+                                    <button type="submit" form="my_new_channel_form" class=" btn btn-default" ng-click="create_new_channel()">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
-                <form>
-                    <div class="input-group">
-                        <input type="text" class="form-control" ng-model="my_chat">
+            </div>
+            <div class="col-xs-8 col-md-9">
+                <h3>{{ my_channel }}:</h3>
+                <div class="my_chat_room">
+                    <div ng-repeat="chat in my_chats" ng-show="chat.channel === my_channel" class="my_chat_block">
+                        <div class="my_username">
+                            <b class="text-muted">{{ chat.user }}:</b>
+                        </div>
+                        <div class="my_message">
+                            {{ chat.message }}
+                        </div>
+                    </div>
+                </div>
+                <form id="send_my_chat_form">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" ng-model="my_chat" autofocus>
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit" ng-click="save_my_chat()">Send</button>
+                            <button class="btn btn-primary" type="submit" ng-click="send_my_chat()">
+                                <i class="glyphicon glyphicon-comment"></i>
+                                Send
+                            </button>
                         </span>
                     </div>
                 </form>
+
             </div>
         </div>
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
 
       <hr>
 
       <footer>
-        <p>&copy; Company 2014</p>
+        <p>AngularFire Chat Hackathon</p>
       </footer>
     </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
