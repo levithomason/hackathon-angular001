@@ -33,17 +33,20 @@
 
 .my_chat_block {
     clear: both;
+    position: relative;
 }
 
 .my_username {
-    float: left;
+    position: absolute;
+    top: 0;
+    left: 0;
     padding-right: 10px;
     width: 130px;
     text-align: right;
-    border-right: 1px solid #DDD;
 }
 
 .my_message {
-    float: left;
+    margin-left: 130px;
     padding-left: 10px;
+    border-left: 1px solid #DDD;
 }
