@@ -55,15 +55,19 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <label for="my_chats">Chats</label>
-                <input id="my_chats" type="textarea" class="form-control" disabled/>
-
-                <div class="input-group">
-                    <input type="text" class="form-control">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Send</button>
-                    </span>
+                <label>Chats</label>
+                <div class="well">
+                    <div ng-repeat="chat in my_chats track by $index">{{ chat }}</div>
                 </div>
+
+                <form>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="my_chat">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit" ng-click="save_my_chat()">Send</button>
+                        </span>
+                    </div>
+                </form>
             </div>
         </div>
       <!-- Example row of columns -->
